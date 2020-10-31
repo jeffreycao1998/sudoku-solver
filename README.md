@@ -1,6 +1,14 @@
 # Project Preview
 ![](https://media2.giphy.com/media/pny4FrpjB0LPQJ3zvT/giphy.gif)
 
+# Features
+
+- start
+
+- stop
+
+- reset
+
 # Getting Started
 
 1. clone the repo

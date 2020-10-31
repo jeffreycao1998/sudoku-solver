@@ -39,11 +39,11 @@ const possible = (row, col, num, board) => {
   return true;
 };
 
-const solve = (board) => {
+const getSteps = (board, steps=[]) => {
   const find = findEmpty(board);
 
   if (!find) {
-    return true; // no more empty spaces === puzzle solved
+    return steps; // no more empty spaces === puzzle solved
   } else {
     const row = find[0];
     const col = find[1];
@@ -51,34 +51,18 @@ const solve = (board) => {
     for (let i = 1; i <= 9; i++) { // go through each cell's possible numbers
       if (possible(row, col, i, board)) {
         board[row][col] = i;
-        if (solve(board)) {
-          return true;
+        steps.push({ row, col, i, advance: true });
+        
+        if (getSteps(board, steps)) {
+          return steps;
         }
+
         board[row][col] = 0;
+        steps.push({ row, col, i, advance: false });
       }
     }
-    return;
+    return; // if puzzle is unsolvable
   }
 };
 
-// const printBoard = (board) => {
-//   for (let i = 0; i < board.length; i++) {
-//     if (i % 3 === 0 && i !== 0) {
-//       console.log('------------------------');
-//     }
-
-//     for (let j = 0; j < board[0].length; j++) {
-//       if (j % 3 === 0 && j !== 0) {
-//         process.stdout.write(' | ');
-//       }
-
-//       if (j === 8) {
-//         process.stdout.write(board[i][j].toString() + '\n')
-//       } else {
-//         process.stdout.write(board[i][j].toString() + ' ')
-//       }
-//     }
-//   }
-// }
-
-export default solve;
+export default getSteps;

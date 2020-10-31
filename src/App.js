@@ -47,13 +47,15 @@ const StyledApp = styled.div`
     .moves {
       width: 55px;
       line-height: 40px;
-      opacity: ${props => props.solvePuzzleRef ? 1 : 0};
+      opacity: ${props => props.curMoveRef > 1 ? 1 : 0};
     }
 
-    .btn-solve {
+    .btn {
       background-color: #9b59b6;
       border: none;
       border-bottom: 3px solid #8e44ad;
+      width: 115px;
+      text-align: center;
       padding: 10px 40px;
       border-radius: 5px;
       color: white;
@@ -70,13 +72,39 @@ const StyledApp = styled.div`
         outline: none;
       }
     }
+
+    .btn-solve {
+      display: ${props => props.solvePuzzleRef ? 'none' : 'block'};
+    }
+
+    .btn-stop {
+      display: ${
+        props => props.solvePuzzleRef &&
+        props.curMoveRef + 1 !== props.allMovesRef.length 
+        ? 'block' : 'none'
+      };
+    }
+
+    .btn-reset {
+      display: ${props => props.curMoveRef + 1 === props.allMovesRef.length ? 'block' : 'none'}
+    }
   }
 `;
 
-const steps = getSteps(board2);
+const steps = getSteps(board);
 
 function App() {
-  const [ boardState, setBoardState ] = useState(board2);
+  const [ boardState, setBoardState ] = useState([
+    [...board[0]],
+    [...board[1]],
+    [...board[2]],
+    [...board[3]],
+    [...board[4]],
+    [...board[5]],
+    [...board[6]],
+    [...board[7]],
+    [...board[8]],
+  ]);
 
   const allMovesRef = useRef(steps);
   const curMoveRef = useRef(0);
@@ -88,7 +116,7 @@ function App() {
     if (solvePuzzleRef.current) {
       timeoutRef.current = setTimeout(() => {
         nextMove(allMovesRef, curMoveRef, timeoutRef.current, setBoardState);
-      }, 20);
+      }, 10000 / allMovesRef.current.length);
     }
   },[boardState]);
 
@@ -96,20 +124,51 @@ function App() {
     solvePuzzleRef.current = true;
     timeoutRef.current = setTimeout(() => {
       nextMove(allMovesRef, curMoveRef, timeoutRef.current, setBoardState);
-    }, 100);
+    }, 10000 / allMovesRef.current.length);
+  };
+
+  const stopSolving = () => {
+    solvePuzzleRef.current = false;
+  };
+
+  const reset = () => {
+    solvePuzzleRef.current = false;
+    const allCells = document.querySelectorAll('.cell');
+    allCells.forEach(cell => cell.style.backgroundColor = 'transparent');
+    curMoveRef.current = 0;
+
+    setBoardState([
+      [...board[0]],
+      [...board[1]],
+      [...board[2]],
+      [...board[3]],
+      [...board[4]],
+      [...board[5]],
+      [...board[6]],
+      [...board[7]],
+      [...board[8]],
+    ]);
   };
 
   return (
     <StyledApp
+      curMoveRef={curMoveRef.current}
+      allMovesRef={allMovesRef.current}
       solvePuzzleRef={solvePuzzleRef.current}
     >
       <Board 
         boardState={boardState}
       />
       <div className='controls'>
-        <div className='moves'>{`${curMoveRef.current + 1}/${allMovesRef.current.length}`}</div>
-        <button className='btn-solve' onClick={startSolving}>
+        <div className='moves'>{`${curMoveRef.current}/${allMovesRef.current.length}`}</div>
+        <button className='btn btn-solve' onClick={startSolving}>
           Solve
+        </button>
+        <button className='btn btn-stop' onClick={stopSolving}>
+          Stop
+        </button>
+        <button className='btn btn-reset' onClick={reset}>
+          Reset
         </button>
       </div>
     </StyledApp>

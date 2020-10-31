@@ -26,7 +26,7 @@ const Board = ({ boardState }) => {
         row.map((cell, cellIndex) => {
           return <div className='cell' key={`row${rowIndex}cell${cellIndex}`}>
             {
-              cell === 0 ? ' ' : cell
+              cell === ' ' ? ' ' : cell
             }
           </div>
         })

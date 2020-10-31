@@ -1,7 +1,7 @@
 const findEmpty = (board) => {
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[0].length; j++) {
-      if (board[i][j] === 0) {
+      if (board[i][j] === ' ') {
         return [i, j];
       }
     }
@@ -48,17 +48,17 @@ const getSteps = (board, steps=[]) => {
     const row = find[0];
     const col = find[1];
 
-    for (let i = 1; i <= 9; i++) { // go through each cell's possible numbers
-      if (possible(row, col, i, board)) {
-        board[row][col] = i;
-        steps.push({ row, col, i, advance: true });
+    for (let num = 1; num <= 9; num++) { // go through each cell's possible numbers
+      if (possible(row, col, num, board)) {
+        board[row][col] = num;
+        steps.push({ row, col, num, advance: true });
         
         if (getSteps(board, steps)) {
           return steps;
         }
 
-        board[row][col] = 0;
-        steps.push({ row, col, i, advance: false });
+        board[row][col] = ' ';
+        steps.push({ row, col, num: ' ', advance: false });
       }
     }
     return; // if puzzle is unsolvable

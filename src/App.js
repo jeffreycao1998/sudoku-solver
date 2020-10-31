@@ -1,45 +1,66 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import getSteps from './util/solve';
 
 import Board from './components/Board';
 
 const board = [
-  [5,3,0,0,7,0,0,0,0],
-  [6,0,0,1,9,5,0,0,0],
-  [0,9,8,0,0,0,0,6,0],
-  [8,0,0,0,6,0,0,0,3],
-  [4,0,0,8,5,3,0,0,1],
-  [7,0,0,0,2,0,0,0,6],
-  [0,6,0,0,0,0,2,8,0],
-  [0,0,0,4,1,9,0,0,5],
-  [0,0,0,0,8,0,0,7,9]
-];
+  [7, 8, ' ', 4, ' ', ' ', 1, 2, 0],
+  [6, ' ', ' ', ' ', 7, 5, ' ', ' ', 9],
+  [' ', ' ', ' ', 6, ' ', 1, ' ', 7, 8],
+  [' ', ' ', 7, ' ', 4, ' ', 2, 6, 0],
+  [' ', ' ', 1, ' ', 5, ' ', 9, 3, 0],
+  [9, ' ', 4, ' ', 6, ' ', ' ', ' ', 5],
+  [' ', 7, ' ', 3, ' ', ' ', ' ', 1, 2],
+  [1, 2, ' ', ' ', ' ', 7, 4, ' ', 0],
+  [' ', 4, 9, 2, ' ', 6, ' ', ' ', 7]
+]
 
 const initialBoard = [
-  [5,3,0,0,7,0,0,0,0],
-  [6,0,0,1,9,5,0,0,0],
-  [0,9,8,0,0,0,0,6,0],
-  [8,0,0,0,6,0,0,0,3],
-  [4,0,0,8,5,3,0,0,1],
-  [7,0,0,0,2,0,0,0,6],
-  [0,6,0,0,0,0,2,8,0],
-  [0,0,0,4,1,9,0,0,5],
-  [0,0,0,0,8,0,0,7,9]
-];
+  [7, 8, ' ', 4, ' ', ' ', 1, 2, 0],
+  [6, ' ', ' ', ' ', 7, 5, ' ', ' ', 9],
+  [' ', ' ', ' ', 6, ' ', 1, ' ', 7, 8],
+  [' ', ' ', 7, ' ', 4, ' ', 2, 6, 0],
+  [' ', ' ', 1, ' ', 5, ' ', 9, 3, 0],
+  [9, ' ', 4, ' ', 6, ' ', ' ', ' ', 5],
+  [' ', 7, ' ', 3, ' ', ' ', ' ', 1, 2],
+  [1, 2, ' ', ' ', ' ', 7, 4, ' ', 0],
+  [' ', 4, 9, 2, ' ', 6, ' ', ' ', 7]
+]
+
+const steps = getSteps(board);
 
 function App() {
   const [ boardState, setBoardState ] = useState(initialBoard);
-  const [ allMoves, setAllMoves ] = useState(getSteps(board));
-  const [ curMove, setCurMove ] = useState(0);
+  const curMoveRef = useRef(0);
+  const allMovesRef = useRef(steps);
+  let timeout;
 
-  // while (curMove < allMoves.length) {
-  //   setBoardState()
-  // }
+  const nextMove = (allMovesRef, curMoveRef) => {
+    console.log('ran');
+    setBoardState(prev => {
+      if (!allMovesRef.current[curMoveRef.current]) return prev;
+
+      const { row, col, num } = allMovesRef.current[curMoveRef.current];
+
+      prev[row][col] = num;
+      return [...prev];
+    })
+    curMoveRef.current += 1;
+    clearTimeout(timeout);
+  };
+
+  useEffect(() => {
+    timeout = setTimeout(() => {
+      nextMove(allMovesRef, curMoveRef);
+    }, 200);
+  },[boardState]);
 
   return (
     <div>
-      <Board boardState={boardState}/>
+      <Board 
+        boardState={boardState}
+      />
     </div>
   );
 }

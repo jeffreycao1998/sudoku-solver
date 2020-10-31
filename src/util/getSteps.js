@@ -1,7 +1,7 @@
 const findEmpty = (board) => {
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[0].length; j++) {
-      if (board[i][j] === ' ') {
+      if (board[i][j] === 0) {
         return [i, j];
       }
     }
@@ -39,9 +39,20 @@ const possible = (row, col, num, board) => {
   return true;
 };
 
-const getSteps = (board, steps=[]) => {
+const getSteps = (startingBoard, steps=[]) => {
+  const board = [
+    [...startingBoard[0]],
+    [...startingBoard[1]],
+    [...startingBoard[2]],
+    [...startingBoard[3]],
+    [...startingBoard[4]],
+    [...startingBoard[5]],
+    [...startingBoard[6]],
+    [...startingBoard[7]],
+    [...startingBoard[8]],
+  ]
   const find = findEmpty(board);
-
+  
   if (!find) {
     return steps; // no more empty spaces === puzzle solved
   } else {
@@ -56,9 +67,9 @@ const getSteps = (board, steps=[]) => {
         if (getSteps(board, steps)) {
           return steps;
         }
-
-        board[row][col] = ' ';
-        steps.push({ row, col, num: ' ', advance: false });
+        
+        board[row][col] = 0;
+        steps.push({ row, col, num: 0, advance: false });
       }
     }
     return; // if puzzle is unsolvable

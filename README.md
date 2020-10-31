@@ -15,6 +15,8 @@ This project helps people visualize a simple sudoku solving backtracking algorit
 
 1. clone the repo
 
-2. run 'npm install' to install all dependencies
+2. cd into root directory
 
-3. run 'npm start'
+3. run 'npm install' to install all dependencies
+
+4. run 'npm start'
